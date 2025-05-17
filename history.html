@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Past Entries</title>
+  <style>
+    .day-block { border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; }
+    .entry { display: flex; justify-content: space-between; }
+    .delete-day-btn { color: red; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>History</h1>
+  <div id="history-list"></div>
+  <a href="index.html">Back to Today</a>
+
+  <script>
+    const historyList = document.getElementById("history-list");
+
+    function loadHistory() {
+      historyList.innerHTML = "";
+
+      for (let key in localStorage) {
+        if (key.startsWith("entries-")) {
+          const day = key.split("entries-")[1];
+          const entries = JSON.parse(localStorage.getItem(key));
+          const div = document.createElement("div");
+          div.className = "day-block";
+          div.innerHTML = `<h3>${day}</h3>`;
+          entries.forEach(entry => {
+            const p = document.createElement("div");
+            p.className = "entry";
+            p.innerHTML = `<span>${entry.amount < 0 ? "Expense" : "Income"}: $${entry.amount}</span> <span>${entry.desc}</span>`;
+            div.appendChild(p);
+          });
+          const del = document.createElement("button");
+          del.textContent = "Delete This Day";
+          del.className = "delete-day-btn";
+          del.onclick = () => {
+            if (confirm(`Delete all entries for ${day}?`)) {
+              localStorage.removeItem(key);
+              loadHistory();
+            }
+          };
+          div.appendChild(del);
+          historyList.appendChild(div);
+        }
+      }
+    }
+
+    loadHistory();
+  </script>
+</body>
+</html>
