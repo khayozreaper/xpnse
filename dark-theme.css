@@ -1,0 +1,118 @@
+/* General Body Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #000000; /* Pure black background for AMOLED screens */
+  color: #FFFFFF; /* White text color */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Header Style */
+h1 {
+  color: #FFFFFF; /* White text for the header */
+  margin-top: 20px;
+  font-size: 2em;
+}
+
+/* Input fields */
+input {
+  background-color: #333333; /* Dark background for input fields */
+  color: #FFFFFF; /* White text color in input fields */
+  border: 1px solid #444444; /* Light border to contrast input fields */
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  width: 250px;
+}
+
+/* Entry List Style */
+#entry-list {
+  margin-top: 20px;
+  width: 80%;
+  max-width: 600px;
+}
+
+/* Entry Item Style */
+.entry {
+  display: flex;
+  justify-content: space-between;
+  background-color: #222222; /* Dark background for each entry */
+  color: #FFFFFF; /* White text color for entries */
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.entry span {
+  flex: 1;
+  overflow-wrap: break-word;
+}
+
+.remove-btn {
+  color: #FF0000; /* Red color for delete button */
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.remove-btn:hover {
+  color: #FF5555; /* Lighter red on hover */
+}
+
+/* Link Style */
+a {
+  color: #4CAF50; /* Green link color */
+  text-decoration: none;
+  margin-top: 20px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* History Page Styles */
+.day-block {
+  background-color: #111111; /* Slightly darker background for history blocks */
+  color: #FFFFFF;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: 1px solid #333333;
+}
+
+.day-block h3 {
+  color: #FFD700; /* Gold color for the day header */
+}
+
+.delete-day-btn {
+  background-color: #222222; /* Dark background for the delete button */
+  color: #FF0000; /* Red text for delete button */
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-day-btn:hover {
+  background-color: #333333; /* Darken button on hover */
+  color: #FF5555; /* Lighter red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  input {
+    width: 200px; /* Adjust input size for smaller screens */
+  }
+  #entry-list {
+    width: 90%;
+  }
+  .entry {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
