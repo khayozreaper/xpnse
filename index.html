@@ -1,85 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <link rel="stylesheet" href="dark-theme.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Expense Tracker</title>
-  <style>
-    body { font-family: sans-serif; margin: 2em; }
-    .entry { display: flex; margin: 0.5em 0; }
-    .entry span { margin-right: 1em; }
-    .remove-btn { cursor: pointer; color: red; margin-left: auto; }
-    input { margin: 0.2em; }
-  </style>
-</head>
-<body>
-  <h1>Today's Expenses & Income</h1>
-  <div>
-    <input id="amount" type="number" placeholder="Amount" />
-    <input id="desc" type="text" placeholder="Description" />
-  </div>
-  <div id="entry-list"></div>
+  <head>
+    <link rel="stylesheet" href="dark-theme.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 2em;
+      }
+      .entry {
+        display: flex;
+        margin: 0.5em 0;
+      }
+      .entry span {
+        margin-right: 1em;
+      }
+      .remove-btn {
+        cursor: pointer;
+        color: red;
+        margin-left: auto;
+      }
+      input {
+        margin: 0.2em;
+      }
+      #total-amount {
+        font-size: 1.5em;
+      }
+      .profit {
+        color: darkgreen;
+      }
+      .loss {
+        color: #800000; /* Maroon color */
+        opacity: 0.7; /* Less contrast for loss */
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="total-amount">Total Amount: $0</h1>
+    <div>
+      <input id="amount" type="number" placeholder="Amount" />
+      <input id="desc" type="text" placeholder="Description" />
+    </div>
+    <div id="entry-list"></div>
 
-  <a href="history.html">View History</a>
+    <a href="history.html">View History</a>
 
-  <script>
-    const amountInput = document.getElementById("amount");
-    const descInput = document.getElementById("desc");
-    const entryList = document.getElementById("entry-list");
+    <script>
+      const amountInput = document.getElementById("amount");
+      const descInput = document.getElementById("desc");
+      const entryList = document.getElementById("entry-list");
+      const totalAmount = document.getElementById("total-amount");
 
-    const today = new Date().toISOString().split("T")[0];
+      const today = new Date().toISOString().split("T")[0];
 
-    const storageKey = `entries-${today}`;
+      const storageKey = `entries-${today}`;
 
-    let entries = JSON.parse(localStorage.getItem(storageKey)) || [];
+      let entries = JSON.parse(localStorage.getItem(storageKey)) || [];
 
-    function saveEntries() {
-      localStorage.setItem(storageKey, JSON.stringify(entries));
-    }
+      function saveEntries() {
+        localStorage.setItem(storageKey, JSON.stringify(entries));
+      }
 
-    function renderEntries() {
-      entryList.innerHTML = "";
-      entries.forEach((entry, index) => {
-        const div = document.createElement("div");
-        div.className = "entry";
-        div.innerHTML = `
-          <span>${entry.amount < 0 ? "Expense" : "Income"}: $${entry.amount}</span>
+      function renderEntries() {
+        entryList.innerHTML = "";
+        let total = 0; // Variable to track the total amount
+        entries.forEach((entry, index) => {
+          total += entry.amount; // Update total with each entry amount
+          const div = document.createElement("div");
+          div.className = "entry";
+          div.innerHTML = `
+            <span>${entry.amount < 0 ? "Expense" : "Income"}: $${
+            entry.amount
+          }</span>
           <span>${entry.desc}</span>
           <span class="remove-btn" data-index="${index}">🗑️</span>
         `;
-        entryList.appendChild(div);
-      });
-    }
+          entryList.appendChild(div);
+        });
 
-    function addEntry(amount, desc) {
-      entries.push({ amount: parseFloat(amount), desc });
-      saveEntries();
-      renderEntries();
-    }
+        // Update the total amount displayed in the header
+        totalAmount.textContent = `Total Amount: ${
+          total < 0 ? "-" : "+"
+        } $${Math.abs(total).toFixed(2)}`;
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        const amt = amountInput.value;
-        const desc = descInput.value;
-        if (amt && desc) {
-          addEntry(amt, desc);
-          amountInput.value = "";
-          descInput.value = "";
+        // Apply color class based on the total amount
+        if (total < 0) {
+          totalAmount.classList.add("loss");
+          totalAmount.classList.remove("profit");
+        } else {
+          totalAmount.classList.add("profit");
+          totalAmount.classList.remove("loss");
         }
       }
-    });
 
-    entryList.addEventListener("click", (e) => {
-      if (e.target.classList.contains("remove-btn")) {
-        const index = e.target.dataset.index;
-        entries.splice(index, 1);
+      function addEntry(amount, desc) {
+        entries.push({ amount: parseFloat(amount), desc });
         saveEntries();
         renderEntries();
       }
-    });
 
-    renderEntries();
-  </script>
-</body>
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const amt = amountInput.value;
+          const desc = descInput.value;
+          if (amt && desc) {
+            addEntry(amt, desc);
+            amountInput.value = "";
+            descInput.value = "";
+          }
+        }
+      });
+
+      entryList.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-btn")) {
+          const index = e.target.dataset.index;
+          entries.splice(index, 1);
+          saveEntries();
+          renderEntries();
+        }
+      });
+
+      renderEntries();
+    </script>
+  </body>
 </html>
