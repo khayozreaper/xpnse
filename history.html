@@ -29,12 +29,23 @@
           const div = document.createElement("div");
           div.className = "day-block";
           div.innerHTML = `<h3>${day}</h3>`;
+          
+          let totalBalance = 0;  // Initialize total balance for the day
+
           entries.forEach(entry => {
             const p = document.createElement("div");
             p.className = "entry";
             p.innerHTML = `<span>${entry.amount < 0 ? "Expense" : "Income"}: $${entry.amount}</span> <span>${entry.desc}</span>`;
             div.appendChild(p);
+            totalBalance += entry.amount;  // Add entry amount to the total balance
           });
+
+          // Display total balance at the end of the day block
+          const totalBalanceElem = document.createElement("div");
+          totalBalanceElem.className = "entry";
+          totalBalanceElem.innerHTML = `<strong>Total Balance: $${totalBalance}</strong>`;
+          div.appendChild(totalBalanceElem);
+
           const del = document.createElement("button");
           del.textContent = "Delete This Day";
           del.className = "delete-day-btn";
